@@ -1,13 +1,16 @@
 package com.mangement.customer.service;
 
+import com.mangement.customer.dto.CustomerDTO;
 import com.mangement.customer.exception.DuplicateCustomerException;
 import com.mangement.customer.model.Customer;
 import com.mangement.customer.repository.CustomerRepository;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.BeanUtils;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -26,14 +29,15 @@ public class CustomerServiceTest {
     
     @Test
     void createCustomer_shouldSaveCustomer() {
-        Customer customer = new Customer();
-        customer.setName("Test");
-        customer.setEmail("test@example.com");
-        customer.setAnnualSpend(500.0);
-        
+    	CustomerDTO customerDto = new CustomerDTO();
+    	customerDto.setName("Test");
+    	customerDto.setEmail("test@example.com");
+    	customerDto.setAnnualSpend(500.0);
+    	Customer customer = new Customer();
+    	BeanUtils.copyProperties(customerDto, customer);
         when(customerRepository.save(customer)).thenReturn(customer);
         
-        Customer result = customerService.createCustomer(customer);
+        Customer result = customerService.createCustomer(customerDto);
         
         assertNotNull(result);
         assertEquals("test@example.com", result.getEmail());
@@ -59,13 +63,14 @@ public class CustomerServiceTest {
     
     @Test
     void shouldThrowWhenEmailAlreadyExists() {
-
     	Customer customer = new Customer();
-        customer.setName("Test");
-        customer.setEmail("test@example.com");
-        customer.setAnnualSpend(500.0);
+    	CustomerDTO customerDto = new CustomerDTO();
+    	customerDto.setName("Test");
+    	customerDto.setEmail("test@example.com");
+    	customerDto.setAnnualSpend(500.0);
+    	BeanUtils.copyProperties(customerDto, customer);
     	when(customerRepository.findByEmail("test@example.com")).thenReturn(Optional.of(customer));
 
-        assertThrows(DuplicateCustomerException.class, () -> customerService.createCustomer(customer));
+        assertThrows(DuplicateCustomerException.class, () -> customerService.createCustomer(customerDto));
     }
 }

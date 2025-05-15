@@ -1,5 +1,6 @@
 package com.mangement.customer.controller;
 
+import com.mangement.customer.constant.ApiMessages;
 import com.mangement.customer.dto.CustomerDTO;
 import com.mangement.customer.model.Customer;
 import com.mangement.customer.service.CustomerService;
@@ -58,8 +59,8 @@ public class CustomerController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable UUID id) {
+    public ResponseEntity<?> deleteCustomer(@PathVariable UUID id) {
         customerService.deleteCustomer(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiMessages.CUSTOMER_DELETED);
     }
 }
