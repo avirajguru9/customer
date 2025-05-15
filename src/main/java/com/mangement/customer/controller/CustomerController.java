@@ -27,9 +27,20 @@ public class CustomerController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Customer> getCustomerById(@PathVariable UUID id) {
-        return customerService.getCustomerById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    	Customer customer = customerService.getCustomerById(id);
+        return ResponseEntity.ok(customer);
+    }
+    
+    @GetMapping("/name/{name}")
+    public ResponseEntity<Customer> getByName(@PathVariable String name) {
+        Customer customer = customerService.getCustomerByName(name);
+        return ResponseEntity.ok(customer);
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Customer> getByEmail(@PathVariable String email) {
+    	Customer customer = customerService.getCustomerByEmail(email);
+        return ResponseEntity.ok(customer);
     }
 
     @GetMapping
@@ -39,9 +50,8 @@ public class CustomerController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Customer> updateCustomer(@PathVariable UUID id, @RequestBody Customer customer) {
-        return customerService.updateCustomer(id, customer)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    	Customer customerUpdated = customerService.updateCustomer(id, customer);
+        return ResponseEntity.ok(customerUpdated);
     }
 
     @DeleteMapping("/{id}")
