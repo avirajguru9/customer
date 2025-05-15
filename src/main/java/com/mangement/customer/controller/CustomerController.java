@@ -1,5 +1,6 @@
 package com.mangement.customer.controller;
 
+import com.mangement.customer.dto.CustomerDTO;
 import com.mangement.customer.model.Customer;
 import com.mangement.customer.service.CustomerService;
 
@@ -22,8 +23,8 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Customer> createCustomer(@Valid @RequestBody Customer customer) {
-        Customer createdCustomer = customerService.createCustomer(customer);
+    public ResponseEntity<Customer> createCustomer(@Valid @RequestBody CustomerDTO customerDTO) {        
+        Customer createdCustomer = customerService.createCustomer(customerDTO);
         return new ResponseEntity<>(createdCustomer, HttpStatus.CREATED);
     }
 
@@ -51,8 +52,8 @@ public class CustomerController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable UUID id, @RequestBody Customer customer) {
-    	Customer customerUpdated = customerService.updateCustomer(id, customer);
+    public ResponseEntity<Customer> updateCustomer(@PathVariable UUID id, @Valid @RequestBody CustomerDTO customerDTO) {
+    	Customer customerUpdated = customerService.updateCustomer(id, customerDTO);
         return ResponseEntity.ok(customerUpdated);
     }
 

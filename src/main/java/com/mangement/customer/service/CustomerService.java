@@ -1,6 +1,7 @@
 package com.mangement.customer.service;
 
 import com.mangement.customer.constant.ApiMessages;
+import com.mangement.customer.dto.CustomerDTO;
 import com.mangement.customer.exception.CustomerNotFoundException;
 import com.mangement.customer.exception.DuplicateCustomerException;
 import com.mangement.customer.model.Customer;
@@ -24,11 +25,12 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    public Customer createCustomer(Customer customer) {
-    	if (customerRepository.findByEmail(customer.getEmail()).isPresent()) {
+    public Customer createCustomer(CustomerDTO customerDto) {
+    	if (customerRepository.findByEmail(customerDto.getEmail()).isPresent()) {
             throw new DuplicateCustomerException(ApiMessages.CUSTOMER_ALREADY_EXISTS);
         }
     	log.info(ApiMessages.CUSTOMER_CREATED);
+    	Customer customer = convertToCustomer(customerDto);
         return customerRepository.save(customer);
     }
 
@@ -71,17 +73,15 @@ public class CustomerService {
         return customers;
     }
 
-    public Customer updateCustomer(UUID id, Customer customerDetails) {
+    public Customer updateCustomer(UUID id, CustomerDTO customerDto) {
     	log.debug("Looking up customer with id: {}", id);
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error(ApiMessages.CUSTOMER_NOT_FOUND_ID, id);
                     return new CustomerNotFoundException("Customer not found with id: " + id);
                 });
-    	customer.setName(customerDetails.getName());
-        customer.setEmail(customerDetails.getEmail());
-        customer.setAnnualSpend(customerDetails.getAnnualSpend());
-        customer.setLastPurchaseDate(customerDetails.getLastPurchaseDate());
+        Customer updated = convertToCustomer(customerDto);
+        updated.setId(customer.getId());
         log.info(ApiMessages.CUSTOMER_UPDATED);
         return customerRepository.save(customer);
     }
@@ -111,5 +111,14 @@ public class CustomerService {
         } else {
             customer.setTier(Tier.SILVER.name());
         }
+    }
+    
+    private Customer convertToCustomer(CustomerDTO dto) {
+        Customer customer = new Customer();
+        customer.setName(dto.getName());
+        customer.setEmail(dto.getEmail());
+        customer.setAnnualSpend(dto.getAnnualSpend());
+        customer.setLastPurchaseDate(dto.getLastPurchaseDate());
+        return customer;
     }
 }
