@@ -9,9 +9,8 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-
-@Entity
 @Data
+@Entity
 public class Customer {
     @Id
     @GeneratedValue(generator = "UUID")

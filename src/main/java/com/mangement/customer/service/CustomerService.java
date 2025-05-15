@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -98,7 +97,7 @@ public class CustomerService {
         customerRepository.deleteById(id);
     }
 
-    private void calculateTier(Customer customer) {
+    public void calculateTier(Customer customer) {
         LocalDateTime now = LocalDateTime.now();
         Double annualSpend = customer.getAnnualSpend();
         LocalDateTime lastPurchaseDate = customer.getLastPurchaseDate();
