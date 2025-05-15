@@ -57,7 +57,7 @@ public class CustomerService {
 
     public Customer getCustomerByEmail(String email) {
     	log.debug("Looking up customer with name: {}", email);
-        Customer customer = customerRepository.findByName(email)
+        Customer customer = customerRepository.findByEmail(email)
                 .orElseThrow(() -> {
                     log.error(ApiMessages.CUSTOMER_NOT_FOUND_EMAIL, email);
                     return new CustomerNotFoundException("Customer not found with email: " + email);
